@@ -2,6 +2,19 @@
 
 Fetch stock data from Nepal Stock Exchange.
 
+## Usage
+
+```ts
+import got from 'got'
+import { Nepse } from '../src/nepse'
+
+;(async () => {
+  const nepse = new Nepse(got)
+
+  console.log(await nepse.getDetails('2019-10-21'))
+})()
+```
+
 ## Examples
 
 - [Get Stock Details](./examples/get-stock-details.ts)
