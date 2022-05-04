@@ -73,8 +73,8 @@ export const getParsedDetails = (): StockDetails[] => {
       lastUpdatedTime: '2021-04-29T14:59:52.077966',
       lastUpdatedPrice: 580,
       totalTrades: 237,
-      averageTradedPrice: 579,
-      marketCap: 49718,
+      averageTradedPrice: 579.77,
+      marketCap: 49718.94,
     },
     {
       serialNumber: 2,
@@ -95,7 +95,7 @@ export const getParsedDetails = (): StockDetails[] => {
       lastUpdatedPrice: 314,
       totalTrades: 411,
       averageTradedPrice: 315,
-      marketCap: 43578,
+      marketCap: 43578.41,
     },
   ]
 }
