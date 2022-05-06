@@ -39,11 +39,11 @@ describe('Nepse', () => {
     nock.enableNetConnect()
   })
 
-  describe('getRawCsv', () => {
+  describe('getTodaysPricesRaw', () => {
     it('should fetch raw csv from API', async () => {
       nock(baseUrl).get(`/${date}`).reply(200, getRawCsvResponse())
 
-      const csv = await nepse.getRawCsv(date)
+      const csv = await nepse.getTodaysPricesRaw(date)
 
       expect(csv).toStrictEqual(getRawCsvResponse())
     })
@@ -60,17 +60,17 @@ describe('Nepse', () => {
         .times(retryCount + 1)
         .reply(statusCode)
 
-      await expect(nepse.getRawCsv(date)).rejects.toThrow(
+      await expect(nepse.getTodaysPricesRaw(date)).rejects.toThrow(
         new Error(`Unable to fetch data. Received StatusCode: ${statusCode}`),
       )
     })
   })
 
-  describe('getDetails', () => {
+  describe('getTodaysPrices', () => {
     it('should get correct details', async () => {
       nock(baseUrl).get(`/${date}`).reply(200, getRawCsvResponse())
 
-      const details = await nepse.getDetails(date)
+      const details = await nepse.getTodaysPrices(date)
 
       expect(details).toStrictEqual(getParsedDetails())
     })
@@ -87,7 +87,7 @@ describe('Nepse', () => {
         .times(retryCount + 1)
         .reply(statusCode)
 
-      await expect(nepse.getDetails(date)).rejects.toThrowError()
+      await expect(nepse.getTodaysPrices(date)).rejects.toThrowError()
     })
   })
 

@@ -1,4 +1,4 @@
-export type StockDetails = {
+export type TTodaysPrice = {
   serialNumber: number
   businessDate: string
   securityId: number

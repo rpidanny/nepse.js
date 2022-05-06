@@ -3,10 +3,10 @@ import { Got } from 'got'
 import fs from 'fs/promises'
 import csv from 'csvtojson'
 import { INepse } from './interfaces'
-import { StockDetails } from './types'
+import { TTodaysPrice } from './types'
 
 export class Nepse implements INepse {
-  private readonly endpoint = 'https://newweb.nepalstock.com/api/nots/market/export/todays-price/'
+  private readonly endpoint = 'https://newweb.nepalstock.com/api'
 
   private parsingOptions = {
     delimiter: ',',
@@ -17,11 +17,14 @@ export class Nepse implements INepse {
 
   constructor(private got: Got) {}
 
-  async getRawCsv(date: string): Promise<string> {
-    const { statusCode, body } = await this.got.get(`${this.endpoint}${date}`, {
-      https: { rejectUnauthorized: false },
-      throwHttpErrors: false,
-    })
+  async getTodaysPricesRaw(date: string): Promise<string> {
+    const { statusCode, body } = await this.got.get(
+      `${this.endpoint}/nots/market/export/todays-price/${date}`,
+      {
+        https: { rejectUnauthorized: false },
+        throwHttpErrors: false,
+      },
+    )
 
     if (statusCode === 200) {
       return body
@@ -30,14 +33,8 @@ export class Nepse implements INepse {
     throw new Error(`Unable to fetch data. Received StatusCode: ${statusCode}`)
   }
 
-  async downloadCsv(date: string, path: string): Promise<void> {
-    const rawCsv = await this.getRawCsv(date)
-
-    await fs.writeFile(`${path}/${date}.csv`, rawCsv)
-  }
-
-  async getDetails(date: string): Promise<StockDetails[]> {
-    const rawCsv = await this.getRawCsv(date)
+  async getTodaysPrices(date: string): Promise<TTodaysPrice[]> {
+    const rawCsv = await this.getTodaysPricesRaw(date)
 
     let parsedData = await csv(this.parsingOptions).fromString(rawCsv)
 
@@ -46,7 +43,13 @@ export class Nepse implements INepse {
     return parsedData
   }
 
-  transformData(data: Record<string, any>): StockDetails {
+  async downloadCsv(date: string, path: string): Promise<void> {
+    const rawCsv = await this.getTodaysPricesRaw(date)
+
+    await fs.writeFile(`${path}/${date}.csv`, rawCsv)
+  }
+
+  transformData(data: Record<string, any>): TTodaysPrice {
     return {
       serialNumber: parseFloat(data['S.N']),
       businessDate: data.BUSINESS_DATE,

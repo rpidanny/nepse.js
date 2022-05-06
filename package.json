@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
     "test": "npm run lint && jest ./test/*",
+    "test:watch": "jest --detectOpenHandles --watch ./test/*",
     "test:watch:test": "jest --detectOpenHandles --watch ./test/unit/nepse.spec.ts",
     "dev": "ts-node src/local-test.ts",
     "semantic-release": "semantic-release"
