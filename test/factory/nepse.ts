@@ -1,4 +1,4 @@
-import { StockDetails } from '../../src'
+import { TTodaysPrice } from '../../src'
 
 export const getRawCsvResponse = (): string => {
   return `S.N,BUSINESS_DATE,SECURITY_ID,SYMBOL,SECURITY_NAME,OPEN_PRICE,HIGH_PRICE,LOW_PRICE,CLOSE_PRICE,TOTAL_TRADED_QUANTITY,TOTAL_TRADED_VALUE,PREVIOUS_DAY_CLOSE_PRICE,FIFTY_TWO_WEEKS_HIGH,FIFTY_TWO_WEEKS_LOW,LAST_UPDATED_TIME,LAST_UPDATED_PRICE,TOTAL_TRADES,AVERAGE_TRADED_PRICE,MARKET_CAPITALIZATION
@@ -53,7 +53,7 @@ export const getRawJsonDetails = (): Record<string, string>[] => {
   ]
 }
 
-export const getParsedDetails = (): StockDetails[] => {
+export const getParsedDetails = (): TTodaysPrice[] => {
   return [
     {
       serialNumber: 1,

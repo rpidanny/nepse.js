@@ -1,8 +1,8 @@
-import { StockDetails } from './types'
+import { TTodaysPrice } from './types'
 export interface INepse {
-  getRawCsv(date: string): Promise<string>
+  getTodaysPricesRaw(date: string): Promise<string>
 
   downloadCsv(date: string, path: string): Promise<void>
 
-  getDetails(date: string): Promise<StockDetails[]>
+  getTodaysPrices(date: string): Promise<TTodaysPrice[]>
 }
