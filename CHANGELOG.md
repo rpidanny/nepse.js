@@ -1,3 +1,14 @@
+### [1.0.2](https://github.com/rpidanny/nepse.js/compare/v1.0.1...v1.0.2) (2022-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* methods (#15)
+
+### Code Refactoring
+
+* methods ([#15](https://github.com/rpidanny/nepse.js/issues/15)) ([30f288a](https://github.com/rpidanny/nepse.js/commit/30f288a09f4991308845aac4781bd42ccce463b8))
+
 ## [1.0.1](https://github.com/rpidanny/nepse.js/compare/v1.0.0...v1.0.1) (2022-05-04)
 
 
