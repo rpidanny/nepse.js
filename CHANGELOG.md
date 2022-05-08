@@ -1,3 +1,14 @@
+## [2.0.0](https://github.com/rpidanny/nepse.js/compare/v1.0.2...v2.0.0) (2022-05-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* add authenticate, getFloorSheet and getSecurities endpoints (#16)
+
+### Features
+
+* add authenticate, getFloorSheet and getSecurities endpoints ([#16](https://github.com/rpidanny/nepse.js/issues/16)) ([76c6910](https://github.com/rpidanny/nepse.js/commit/76c69104290b530b9853ac0325e740261d19ace6))
+
 ### [1.0.2](https://github.com/rpidanny/nepse.js/compare/v1.0.1...v1.0.2) (2022-05-06)
 
 
