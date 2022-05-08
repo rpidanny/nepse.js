@@ -34,20 +34,6 @@ describe('GenericClient', () => {
 
       expect(instance1).toStrictEqual(instance2)
     })
-
-    // it.only('should configure got with proper defauls', async () => {
-    //   const gotInstance = await genericClient.getGotInstance()
-
-    //   const {
-    //     defaults: {
-    //       options: { retry },
-    //     },
-    //   } = gotInstance
-
-    //   console.log(retry)
-
-    //   // expect(retry).toEqual({})
-    // })
   })
 
   describe('getGotInstanceWithAuth', () => {
