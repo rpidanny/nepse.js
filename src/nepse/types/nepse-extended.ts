@@ -1,4 +1,6 @@
-export type TTodaysPrice = {
+import { TFloorSheet } from './nepse'
+
+export type TDailyStockPrice = {
   serialNumber: number
   businessDate: string
   securityId: number
@@ -18,4 +20,11 @@ export type TTodaysPrice = {
   totalTrades: number
   averageTradedPrice: number
   marketCap: number
+}
+
+export type TDailyFloorSheet = {
+  totalAmount: number
+  totalQty: number
+  totalTrades: number
+  floorSheets: TFloorSheet[]
 }

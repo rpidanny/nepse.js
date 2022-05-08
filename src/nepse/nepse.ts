@@ -1,75 +1,77 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Got } from 'got'
-import fs from 'fs/promises'
-import csv from 'csvtojson'
+import { Response } from 'got'
+
+import { GenericClient } from '../utils/generic-client'
+import { UnexpectedUpstreamResponseError } from './errors'
 import { INepse } from './interfaces'
-import { TTodaysPrice } from './types'
+import { TAuthenticateResponse, TGetFloorSheetResponse, TGetSecuritiesResponse } from './types'
 
-export class Nepse implements INepse {
-  private readonly endpoint = 'https://newweb.nepalstock.com/api'
+export class Nepse extends GenericClient implements INepse {
+  protected readonly upstreamName = 'nepse'
+  protected readonly endpoint = 'https://newweb.nepalstock.com/api'
 
-  private parsingOptions = {
-    delimiter: ',',
-    quote: '"',
-    trim: true,
-    flatKeys: true,
+  protected async getAuthHeader(): Promise<string> {
+    const { accessToken } = await this.authenticate()
+    const token = this.patchAccessToken(accessToken)
+    return `Salter ${token}`
   }
 
-  constructor(private got: Got) {}
+  private handleResponse<T>(response: Response<T>, expectedStatusCode = 200): T {
+    const { statusCode, body } = response
 
-  async getTodaysPricesRaw(date: string): Promise<string> {
-    const { statusCode, body } = await this.got.get(
-      `${this.endpoint}/nots/market/export/todays-price/${date}`,
-      {
-        https: { rejectUnauthorized: false },
-        throwHttpErrors: false,
-      },
-    )
-
-    if (statusCode === 200) {
+    if (expectedStatusCode === statusCode) {
       return body
     }
 
-    throw new Error(`Unable to fetch data. Received StatusCode: ${statusCode}`)
+    throw new UnexpectedUpstreamResponseError(this.upstreamName, statusCode, body)
   }
 
-  async getTodaysPrices(date: string): Promise<TTodaysPrice[]> {
-    const rawCsv = await this.getTodaysPricesRaw(date)
+  async authenticate(): Promise<TAuthenticateResponse> {
+    const res = await this.call<TAuthenticateResponse>('get', 'authenticate/prove', {})
 
-    let parsedData = await csv(this.parsingOptions).fromString(rawCsv)
-
-    parsedData = parsedData.map((d) => this.transformData(d))
-
-    return parsedData
+    return this.handleResponse(res)
   }
 
-  async downloadCsv(date: string, path: string): Promise<void> {
-    const rawCsv = await this.getTodaysPricesRaw(date)
+  // TODO: Replce with API Call
+  async getTodaysPricesExport(date: string): Promise<string> {
+    const res = await this.call<string>('get', `nots/market/export/todays-price/${date}`, {
+      responseType: undefined,
+    })
 
-    await fs.writeFile(`${path}/${date}.csv`, rawCsv)
+    return this.handleResponse(res)
   }
 
-  transformData(data: Record<string, any>): TTodaysPrice {
-    return {
-      serialNumber: parseFloat(data['S.N']),
-      businessDate: data.BUSINESS_DATE,
-      securityId: parseInt(data.SECURITY_ID),
-      symbol: data.SYMBOL,
-      securityName: data.SECURITY_NAME,
-      openPrice: parseFloat(data.OPEN_PRICE),
-      highPrice: parseFloat(data.HIGH_PRICE),
-      lowPrice: parseFloat(data.LOW_PRICE),
-      closePrice: parseFloat(data.CLOSE_PRICE),
-      totalTradedQuantity: parseInt(data.TOTAL_TRADED_QUANTITY),
-      totalTradedValue: parseFloat(data.TOTAL_TRADED_VALUE),
-      previousDayClosePrice: parseFloat(data.PREVIOUS_DAY_CLOSE_PRICE),
-      fiftyTwoWeekHigh: parseFloat(data.FIFTY_TWO_WEEKS_HIGH),
-      fiftyTwoWeekLow: parseFloat(data.FIFTY_TWO_WEEKS_LOW),
-      lastUpdatedTime: data.LAST_UPDATED_TIME,
-      lastUpdatedPrice: parseFloat(data.LAST_UPDATED_PRICE),
-      totalTrades: parseInt(data.TOTAL_TRADES),
-      averageTradedPrice: parseFloat(data.AVERAGE_TRADED_PRICE),
-      marketCap: parseFloat(data.MARKET_CAPITALIZATION),
-    }
+  async getFloorSheet(page = 0, size = 500): Promise<TGetFloorSheetResponse> {
+    const res = await this.callWithAuth<TGetFloorSheetResponse>(
+      'post',
+      `nots/nepse-data/floorsheet?&sort=contractId,desc&size=${size}&page=${page}`,
+      {
+        json: { id: 249 },
+        retry: {
+          methods: ['POST'],
+        },
+      },
+    )
+
+    return this.handleResponse(res)
+  }
+
+  async getSecurities(includeDelisted = false): Promise<TGetSecuritiesResponse[]> {
+    const res = await this.callWithAuth<TGetSecuritiesResponse[]>(
+      'get',
+      `nots/security?nonDelisted=${!includeDelisted}`,
+      {},
+    )
+
+    return this.handleResponse(res)
+  }
+
+  patchAccessToken(token: string): string {
+    const bodyPrefix = 'eyJpc3MiOiJ5Y28iLCJzdWIiOiIxMiIsImlhdCI6M'
+
+    const temp = token.split('.')
+
+    const bodySuffix = temp[1].slice(bodyPrefix.length + 2)
+
+    return `${temp[0]}.${bodyPrefix}${bodySuffix}.${temp[2]}`
   }
 }
