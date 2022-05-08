@@ -5,7 +5,7 @@
     "removeComments": true,
     "isolatedModules": true,
     "declaration": true,
-    // "target": "ES2019",
+    // "target": "es6",
     // "sourceMap": true,
     // "outDir": "./dist",
     // "rootDirs": ["./", "./src"],

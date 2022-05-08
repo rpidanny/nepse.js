@@ -1,8 +1,29 @@
-import { TTodaysPrice } from './types'
+import {
+  TAuthenticateResponse,
+  TDailyFloorSheet,
+  TDailyStockPrice,
+  TGetFloorSheetResponse,
+  TGetSecuritiesResponse,
+} from './types'
+
+export interface INepseExtended {
+  getTodaysPricesExport(date: string): Promise<TDailyStockPrice[]>
+
+  downloadTodaysPriceExportToCsv(date: string, path: string): Promise<string>
+
+  getFloorSheet(): Promise<TDailyFloorSheet>
+
+  downloadFloorSheetsToCsv(path: string): Promise<string>
+}
+
 export interface INepse {
-  getTodaysPricesRaw(date: string): Promise<string>
+  patchAccessToken(token: string): string
 
-  downloadCsv(date: string, path: string): Promise<void>
+  authenticate(): Promise<TAuthenticateResponse>
 
-  getTodaysPrices(date: string): Promise<TTodaysPrice[]>
+  getTodaysPricesExport(date: string): Promise<string>
+
+  getFloorSheet(page?: number, size?: number): Promise<TGetFloorSheetResponse>
+
+  getSecurities(includeDelisted?: boolean): Promise<TGetSecuritiesResponse[]>
 }
