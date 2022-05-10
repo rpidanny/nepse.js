@@ -55,6 +55,7 @@
     "eslint": "^7.6.0",
     "husky": "^5.0.9",
     "jest": "^26.2.2",
+    "jest-mock-extended": "^2.0.6",
     "lint-staged": "^11.0.0",
     "nock": "^13.2.4",
     "prettier": "^2.0.5",
@@ -74,7 +75,6 @@
   "dependencies": {
     "csvtojson": "^2.0.10",
     "got": "^11.8.3",
-    "jest-mock-extended": "^2.0.5",
     "json2csv": "^5.0.7",
     "moment": "^2.29.3"
   }
