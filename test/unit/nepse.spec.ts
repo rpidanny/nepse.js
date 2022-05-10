@@ -9,6 +9,7 @@ import {
   getMockFloorSheetResponse,
   getMockTodaysPricesExportResponse,
   getSecuritiesResponse,
+  getSecurityHistoryResponse,
 } from '../factory'
 
 describe('Nepse', () => {
@@ -224,6 +225,77 @@ describe('Nepse', () => {
             .reply(statusCode)
 
           await expect(nepse.getSecurities()).rejects.toBeInstanceOf(errorClass)
+        },
+      )
+    })
+
+    describe('getSecurityHistory', () => {
+      const defaultPage = 0
+      const defaultSize = 500
+      const securityId = 131
+
+      const startDate = '2019-10-19'
+      const endDate = '2019-10-21'
+
+      it('should securities as JSON array', async () => {
+        nock(baseUrl)
+          .get(
+            `/nots/market/history/security/${securityId}?&page=${defaultPage}&size=${defaultSize}&startDate=${startDate}&endDate=${endDate}`,
+          )
+          .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
+          .reply(200, getSecurityHistoryResponse())
+
+        await expect(nepse.getSecurityHistory(securityId, startDate, endDate)).resolves.toEqual(
+          getSecurityHistoryResponse(),
+        )
+      })
+
+      it('should fetch security histories with custom page and size', async () => {
+        const page = 1
+        const size = 200
+
+        nock(baseUrl)
+          .get(
+            `/nots/market/history/security/${securityId}?&page=${page}&size=${size}&startDate=${startDate}&endDate=${endDate}`,
+          )
+          .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
+          .reply(200, getSecurityHistoryResponse())
+
+        await expect(
+          nepse.getSecurityHistory(securityId, startDate, endDate, page, size),
+        ).resolves.toEqual(getSecurityHistoryResponse())
+      })
+
+      it.each`
+        statusCode | errorClass                         | errorClassName                       | retryCount
+        ${201}     | ${UnexpectedUpstreamResponseError} | ${'UnexpectedUpstreamResponseError'} | ${0}
+        ${204}     | ${UnexpectedUpstreamResponseError} | ${'UnexpectedUpstreamResponseError'} | ${0}
+        ${400}     | ${RequestError}                    | ${'RequestError'}                    | ${0}
+        ${401}     | ${RequestError}                    | ${'RequestError'}                    | ${0}
+        ${419}     | ${RequestError}                    | ${'RequestError'}                    | ${0}
+        ${500}     | ${RequestError}                    | ${'RequestError'}                    | ${2}
+        ${503}     | ${RequestError}                    | ${'RequestError'}                    | ${2}
+      `(
+        'should throw $errorClassName error when API returns $statusCode',
+        async ({ statusCode, errorClass, retryCount }) => {
+          nock.cleanAll()
+
+          nock(baseUrl)
+            .get(`/authenticate/prove`)
+            .times(retryCount + 1)
+            .reply(200, getMockAuthenticateResponse())
+
+          nock(baseUrl)
+            .get(
+              `/nots/market/history/security/${securityId}?&page=${defaultPage}&size=${defaultSize}&startDate=${startDate}&endDate=${endDate}`,
+            )
+            .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
+            .times(retryCount + 1)
+            .reply(statusCode)
+
+          await expect(
+            nepse.getSecurityHistory(securityId, startDate, endDate),
+          ).rejects.toBeInstanceOf(errorClass)
         },
       )
     })

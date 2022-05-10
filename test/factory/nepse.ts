@@ -2,6 +2,7 @@ import {
   TAuthenticateResponse,
   TGetFloorSheetResponse,
   TGetSecuritiesResponse,
+  TGetSecurityHistoryResponse,
   TSecurity,
 } from '../../src/nepse'
 
@@ -98,4 +99,49 @@ export const getSecuritiesResponse = (
       ...overrides,
     },
   ]
+}
+
+export const getSecurityHistoryResponse = (
+  overrides: Partial<TGetSecurityHistoryResponse> = {},
+): TGetSecurityHistoryResponse => {
+  return {
+    content: [
+      {
+        businessDate: '2022-05-09',
+        totalTrades: 858,
+        totalTradedQuantity: 40948,
+        totalTradedValue: 36905688.6,
+        highPrice: 907.0,
+        lowPrice: 889.0,
+        closePrice: 896.5,
+      },
+      {
+        businessDate: '2022-05-08',
+        totalTrades: 1078,
+        totalTradedQuantity: 46835,
+        totalTradedValue: 41548903.6,
+        highPrice: 910.0,
+        lowPrice: 880.0,
+        closePrice: 889.0,
+      },
+    ],
+    pageable: {
+      sort: { sorted: false, unsorted: true, empty: true },
+      pageSize: 500,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false,
+    },
+    totalPages: 1,
+    totalElements: 2,
+    last: true,
+    number: 0,
+    size: 500,
+    numberOfElements: 2,
+    sort: { sorted: false, unsorted: true, empty: true },
+    first: true,
+    empty: false,
+    ...overrides,
+  }
 }
