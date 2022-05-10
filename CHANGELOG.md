@@ -1,3 +1,10 @@
+### [2.0.1](https://github.com/rpidanny/nepse.js/compare/v2.0.0...v2.0.1) (2022-05-10)
+
+
+### Bug Fixes
+
+* misplaced dev dependency ([#22](https://github.com/rpidanny/nepse.js/issues/22)) ([8381dad](https://github.com/rpidanny/nepse.js/commit/8381dad0b7f2e168f480c9312a47ba26ce6fd06c))
+
 ## [2.0.0](https://github.com/rpidanny/nepse.js/compare/v1.0.2...v2.0.0) (2022-05-08)
 
 
