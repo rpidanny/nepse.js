@@ -5,6 +5,7 @@ import {
   TGetFloorSheetResponse,
   TGetSecuritiesResponse,
   TGetSecurityHistoryResponse,
+  TSecurityHistory,
 } from './types'
 
 export interface INepseExtended {
@@ -15,6 +16,12 @@ export interface INepseExtended {
   getFloorSheet(): Promise<TDailyFloorSheet>
 
   downloadFloorSheetsToCsv(path: string): Promise<string>
+
+  getSecurityHistory(
+    securityId: number,
+    startDate: string,
+    endDate: string,
+  ): Promise<TSecurityHistory>
 }
 
 export interface INepse {

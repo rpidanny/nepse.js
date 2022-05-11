@@ -7,7 +7,7 @@ import fs from 'fs/promises'
 import { Parser as Json2CsvParser } from 'json2csv'
 
 import { INepse, INepseExtended } from './interfaces'
-import { TDailyFloorSheet, TDailyStockPrice, TFloorSheet } from './types'
+import { TDailyFloorSheet, TDailyStockPrice, TFloorSheet, TSecurityHistory } from './types'
 
 export class NepseExtended implements INepseExtended {
   private parsingOptions = {
@@ -99,5 +99,32 @@ export class NepseExtended implements INepseExtended {
     await fs.writeFile(filePath, csvData)
 
     return filePath
+  }
+
+  async getSecurityHistory(
+    securityId: number,
+    startDate: string,
+    endDate: string,
+  ): Promise<TSecurityHistory> {
+    const { totalPages, content } = await this.nepse.getSecurityHistory(
+      securityId,
+      startDate,
+      endDate,
+    )
+
+    let histories: TSecurityHistory = [...content]
+
+    for (let pageNumber = 1; pageNumber < totalPages; pageNumber++) {
+      const { content } = await this.nepse.getSecurityHistory(
+        securityId,
+        startDate,
+        endDate,
+        pageNumber,
+      )
+
+      histories = histories.concat(content)
+    }
+
+    return histories
   }
 }

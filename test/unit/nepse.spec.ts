@@ -7,9 +7,9 @@ import {
   getMockAccessToken,
   getMockAuthenticateResponse,
   getMockFloorSheetResponse,
+  getMockSecuritiesResponse,
+  getMockSecurityHistoryResponse,
   getMockTodaysPricesExportResponse,
-  getSecuritiesResponse,
-  getSecurityHistoryResponse,
 } from '../factory'
 
 describe('Nepse', () => {
@@ -183,9 +183,9 @@ describe('Nepse', () => {
         nock(baseUrl)
           .get(`/nots/security?nonDelisted=${!defaultIncludeDelisted}`)
           .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
-          .reply(200, getSecuritiesResponse())
+          .reply(200, getMockSecuritiesResponse())
 
-        await expect(nepse.getSecurities()).resolves.toEqual(getSecuritiesResponse())
+        await expect(nepse.getSecurities()).resolves.toEqual(getMockSecuritiesResponse())
       })
 
       it('should fetch floorsheet with custom page and size', async () => {
@@ -194,9 +194,11 @@ describe('Nepse', () => {
         nock(baseUrl)
           .get(`/nots/security?nonDelisted=${!includeDelisted}`)
           .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
-          .reply(200, getSecuritiesResponse())
+          .reply(200, getMockSecuritiesResponse())
 
-        await expect(nepse.getSecurities(includeDelisted)).resolves.toEqual(getSecuritiesResponse())
+        await expect(nepse.getSecurities(includeDelisted)).resolves.toEqual(
+          getMockSecuritiesResponse(),
+        )
       })
 
       it.each`
@@ -243,10 +245,10 @@ describe('Nepse', () => {
             `/nots/market/history/security/${securityId}?&page=${defaultPage}&size=${defaultSize}&startDate=${startDate}&endDate=${endDate}`,
           )
           .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
-          .reply(200, getSecurityHistoryResponse())
+          .reply(200, getMockSecurityHistoryResponse())
 
         await expect(nepse.getSecurityHistory(securityId, startDate, endDate)).resolves.toEqual(
-          getSecurityHistoryResponse(),
+          getMockSecurityHistoryResponse(),
         )
       })
 
@@ -259,11 +261,11 @@ describe('Nepse', () => {
             `/nots/market/history/security/${securityId}?&page=${page}&size=${size}&startDate=${startDate}&endDate=${endDate}`,
           )
           .matchHeader('authorization', `Salter ${getMockAccessToken()}`)
-          .reply(200, getSecurityHistoryResponse())
+          .reply(200, getMockSecurityHistoryResponse())
 
         await expect(
           nepse.getSecurityHistory(securityId, startDate, endDate, page, size),
-        ).resolves.toEqual(getSecurityHistoryResponse())
+        ).resolves.toEqual(getMockSecurityHistoryResponse())
       })
 
       it.each`

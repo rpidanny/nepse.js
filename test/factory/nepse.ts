@@ -86,7 +86,7 @@ export const getMockFloorSheetResponse = (
   }
 }
 
-export const getSecuritiesResponse = (
+export const getMockSecuritiesResponse = (
   overrides: Partial<TSecurity> = {},
 ): TGetSecuritiesResponse => {
   return [
@@ -101,7 +101,7 @@ export const getSecuritiesResponse = (
   ]
 }
 
-export const getSecurityHistoryResponse = (
+export const getMockSecurityHistoryResponse = (
   overrides: Partial<TGetSecurityHistoryResponse> = {},
 ): TGetSecurityHistoryResponse => {
   return {
