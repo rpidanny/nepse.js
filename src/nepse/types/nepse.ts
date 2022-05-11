@@ -65,3 +65,34 @@ export type TGetFloorSheetResponse = {
     totalPages: number
   }
 }
+
+export type TSecurityHistoryItem = {
+  businessDate: string
+  closePrice: number
+  highPrice: number
+  lowPrice: number
+  totalTradedQuantity: number
+  totalTradedValue: number
+  totalTrades: number
+}
+
+export type TGetSecurityHistoryResponse = {
+  empty: boolean
+  first: boolean
+  last: boolean
+  number: number
+  numberOfElements: number
+  size: number
+  totalElements: number
+  totalPages: number
+  pageable: {
+    sort: { sorted: boolean; unsorted: boolean; empty: boolean }
+    pageSize: number
+    pageNumber: number
+    offset: number
+    unpaged: boolean
+    paged: boolean
+  }
+  sort: { sorted: boolean; unsorted: boolean; empty: boolean }
+  content: TSecurityHistoryItem[]
+}

@@ -125,7 +125,30 @@ export const getMockDailyFloorSheet = (
   }
 }
 
-export const getDailyFloorSheetCsvExport = (): string => {
+export const getMockDailyFloorSheetCsvExport = (): string => {
   return `"id","contractId","contractType","stockSymbol","buyerMemberId","sellerMemberId","contractQuantity","contractRate","contractAmount","businessDate","tradeBookId","stockId","buyerBrokerName","sellerBrokerName","tradeTime","securityName"
 ,2022050504009912,,"NICL","1","53",30,660,19800,"2022-05-05",63686114,176,"Kumari Securities Private Limited","Investment Management Nepal Pvt. Ltd.","2022-05-05T14:59:59.962911","Nepal Insurance Co. Ltd."`
+}
+
+export const getMockSecurityHistory = () => {
+  return [
+    {
+      businessDate: '2022-05-09',
+      totalTrades: 858,
+      totalTradedQuantity: 40948,
+      totalTradedValue: 36905688.6,
+      highPrice: 907.0,
+      lowPrice: 889.0,
+      closePrice: 896.5,
+    },
+    {
+      businessDate: '2022-05-08',
+      totalTrades: 1078,
+      totalTradedQuantity: 46835,
+      totalTradedValue: 41548903.6,
+      highPrice: 910.0,
+      lowPrice: 880.0,
+      closePrice: 889.0,
+    },
+  ]
 }

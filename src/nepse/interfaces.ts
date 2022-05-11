@@ -4,6 +4,8 @@ import {
   TDailyStockPrice,
   TGetFloorSheetResponse,
   TGetSecuritiesResponse,
+  TGetSecurityHistoryResponse,
+  TSecurityHistory,
 } from './types'
 
 export interface INepseExtended {
@@ -14,6 +16,12 @@ export interface INepseExtended {
   getFloorSheet(): Promise<TDailyFloorSheet>
 
   downloadFloorSheetsToCsv(path: string): Promise<string>
+
+  getSecurityHistory(
+    securityId: number,
+    startDate: string,
+    endDate: string,
+  ): Promise<TSecurityHistory>
 }
 
 export interface INepse {
@@ -26,4 +34,12 @@ export interface INepse {
   getFloorSheet(page?: number, size?: number): Promise<TGetFloorSheetResponse>
 
   getSecurities(includeDelisted?: boolean): Promise<TGetSecuritiesResponse[]>
+
+  getSecurityHistory(
+    securityId: number,
+    startDate: string,
+    endDate: string,
+    page?: number,
+    size?: number,
+  ): Promise<TGetSecurityHistoryResponse>
 }

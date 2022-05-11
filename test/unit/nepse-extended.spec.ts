@@ -5,11 +5,14 @@ import { mock } from 'jest-mock-extended'
 import tmp from 'tmp-promise'
 
 import { INepseExtended, Nepse, NepseExtended } from '../../src'
+import { TSecurityHistory } from '../../src/nepse'
 import {
-  getDailyFloorSheetCsvExport,
   getMockDailyFloorSheet,
+  getMockDailyFloorSheetCsvExport,
   getMockDailyStockPrices,
   getMockFloorSheetResponse,
+  getMockSecurityHistory,
+  getMockSecurityHistoryResponse,
   getMockTodaysPricesExportResponse,
 } from '../factory'
 
@@ -159,7 +162,7 @@ describe('Nepse', () => {
 
       const writtenCsv = await fs.readFile(filePath, 'utf-8')
 
-      expect(writtenCsv).toStrictEqual(getDailyFloorSheetCsvExport())
+      expect(writtenCsv).toStrictEqual(getMockDailyFloorSheetCsvExport())
 
       await cleanup()
     })
@@ -190,6 +193,55 @@ describe('Nepse', () => {
       await expect(nepseExtended.downloadFloorSheetsToCsv(path)).rejects.toThrowError()
 
       await cleanup()
+    })
+  })
+
+  describe('getSecurityHistory', () => {
+    const securityId = 125
+    const startDate = '2019-10-19'
+    const endDate = '2019-10-21'
+
+    it('should get security history', async () => {
+      nepse.getSecurityHistory.mockImplementationOnce(async () => {
+        return getMockSecurityHistoryResponse()
+      })
+
+      await expect(
+        nepseExtended.getSecurityHistory(securityId, startDate, endDate),
+      ).resolves.toStrictEqual(getMockSecurityHistory())
+    })
+
+    it.each`
+      totalPages
+      ${2}
+      ${50}
+    `('should get security history with $totalPages pages', async ({ totalPages }) => {
+      const mockSecurityHistory = getMockSecurityHistory()
+
+      let securityHistories: TSecurityHistory = []
+
+      for (let i = 0; i < totalPages; i++) {
+        nepse.getSecurityHistory.mockImplementationOnce(async () => {
+          // we can always return the same totalPages cuz we only check totalPages once in the first request
+          return getMockSecurityHistoryResponse({ totalPages })
+        })
+        securityHistories = securityHistories.concat(mockSecurityHistory)
+      }
+
+      await expect(
+        nepseExtended.getSecurityHistory(securityId, startDate, endDate),
+      ).resolves.toStrictEqual(securityHistories)
+      expect(nepse.getSecurityHistory).toHaveBeenCalledTimes(totalPages)
+    })
+
+    it('should throw an error when nepse throws error', async () => {
+      nepse.getSecurityHistory.mockImplementationOnce(async () => {
+        throw new Error('Some Error')
+      })
+
+      await expect(
+        nepseExtended.getSecurityHistory(securityId, startDate, endDate),
+      ).rejects.toThrow(Error)
     })
   })
 })

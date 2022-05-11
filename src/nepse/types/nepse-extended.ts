@@ -1,4 +1,4 @@
-import { TFloorSheet } from './nepse'
+import { TFloorSheet, TSecurityHistoryItem } from './nepse'
 
 export type TDailyStockPrice = {
   serialNumber: number
@@ -28,3 +28,5 @@ export type TDailyFloorSheet = {
   totalTrades: number
   floorSheets: TFloorSheet[]
 }
+
+export type TSecurityHistory = TSecurityHistoryItem[]

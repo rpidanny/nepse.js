@@ -3,7 +3,12 @@ import { Response } from 'got'
 import { GenericClient } from '../utils/generic-client'
 import { UnexpectedUpstreamResponseError } from './errors'
 import { INepse } from './interfaces'
-import { TAuthenticateResponse, TGetFloorSheetResponse, TGetSecuritiesResponse } from './types'
+import {
+  TAuthenticateResponse,
+  TGetFloorSheetResponse,
+  TGetSecuritiesResponse,
+  TGetSecurityHistoryResponse,
+} from './types'
 
 export class Nepse extends GenericClient implements INepse {
   protected readonly upstreamName = 'nepse'
@@ -23,6 +28,16 @@ export class Nepse extends GenericClient implements INepse {
     }
 
     throw new UnexpectedUpstreamResponseError(this.upstreamName, statusCode, body)
+  }
+
+  patchAccessToken(token: string): string {
+    const bodyPrefix = 'eyJpc3MiOiJ5Y28iLCJzdWIiOiIxMiIsImlhdCI6M'
+
+    const temp = token.split('.')
+
+    const bodySuffix = temp[1].slice(bodyPrefix.length + 2)
+
+    return `${temp[0]}.${bodyPrefix}${bodySuffix}.${temp[2]}`
   }
 
   async authenticate(): Promise<TAuthenticateResponse> {
@@ -65,13 +80,18 @@ export class Nepse extends GenericClient implements INepse {
     return this.handleResponse(res)
   }
 
-  patchAccessToken(token: string): string {
-    const bodyPrefix = 'eyJpc3MiOiJ5Y28iLCJzdWIiOiIxMiIsImlhdCI6M'
+  async getSecurityHistory(
+    securityId: number,
+    startDate: string,
+    endDate: string,
+    page = 0,
+    size = 500,
+  ): Promise<TGetSecurityHistoryResponse> {
+    const res = await this.callWithAuth<TGetSecurityHistoryResponse>(
+      'get',
+      `nots/market/history/security/${securityId}?&page=${page}&size=${size}&startDate=${startDate}&endDate=${endDate}`,
+    )
 
-    const temp = token.split('.')
-
-    const bodySuffix = temp[1].slice(bodyPrefix.length + 2)
-
-    return `${temp[0]}.${bodyPrefix}${bodySuffix}.${temp[2]}`
+    return this.handleResponse<TGetSecurityHistoryResponse>(res)
   }
 }
