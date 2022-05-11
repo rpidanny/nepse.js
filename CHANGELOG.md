@@ -1,3 +1,15 @@
+## [2.1.0](https://github.com/rpidanny/nepse.js/compare/v2.0.2...v2.1.0) (2022-05-11)
+
+
+### Features
+
+* add getSecurityHistory ([#23](https://github.com/rpidanny/nepse.js/issues/23)) ([3c9fa40](https://github.com/rpidanny/nepse.js/commit/3c9fa4045be8df9269f283223a673cc502bb0023))
+
+
+### Bug Fixes
+
+* commitlint body rule ([b842e42](https://github.com/rpidanny/nepse.js/commit/b842e42a68b1e93f6ccaa6026e03c74149d87690))
+
 ### [2.0.2](https://github.com/rpidanny/nepse.js/compare/v2.0.1...v2.0.2) (2022-05-11)
 
 
