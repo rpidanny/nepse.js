@@ -1,3 +1,10 @@
+### [2.0.2](https://github.com/rpidanny/nepse.js/compare/v2.0.1...v2.0.2) (2022-05-11)
+
+
+### Bug Fixes
+
+* get floorsheet payload ([#24](https://github.com/rpidanny/nepse.js/issues/24)) ([e36ce33](https://github.com/rpidanny/nepse.js/commit/e36ce331d18a507d3455afd6255e4912d74f02ac))
+
 ### [2.0.1](https://github.com/rpidanny/nepse.js/compare/v2.0.0...v2.0.1) (2022-05-10)
 
 

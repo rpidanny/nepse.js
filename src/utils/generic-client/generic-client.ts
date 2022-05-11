@@ -63,7 +63,7 @@ export abstract class GenericClient implements IGenericClient {
           beforeRequest: [this.addAuthorizationHeader.bind(this)],
           // TODO: create logger extension
           // beforeRetry: [
-          //   (_options, error, retryCount) => {
+          //   (_options, _error, retryCount) => {
           //     console.log(`Retrying for the ${retryCount} time`)
           //   },
           // ],
@@ -103,9 +103,9 @@ export abstract class GenericClient implements IGenericClient {
 
   protected getTimeoutConfig(): Delays | number {
     return {
-      connect: 500,
-      request: 2000,
-      response: 1000,
+      connect: 1000,
+      request: 7000,
+      response: 5000,
     }
   }
 

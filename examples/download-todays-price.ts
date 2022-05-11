@@ -20,6 +20,6 @@ const nepseExtended = new NepseExtended(nepse)
   const dates = getDates('2021-04-29', '2022-04-28').map((d) => moment(d).format('YYYY-MM-DD'))
 
   dates.forEach(async (date) => {
-    await nepseExtended.downloadTodaysPriceExportToCsv(date, './dumps')
+    await nepseExtended.downloadTodaysPriceExportToCsv(date, './dumps/todays-price')
   })
 })()
