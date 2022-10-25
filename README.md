@@ -2,6 +2,8 @@
 
 Fetch stock data from Nepal Stock Exchange.
 
+> TODO: update documentation
+
 ## Usage
 
 ```ts
