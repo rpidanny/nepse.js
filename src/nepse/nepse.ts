@@ -60,7 +60,7 @@ export class Nepse extends GenericClient implements INepse {
       'post',
       `nots/nepse-data/floorsheet?&sort=contractId,desc&size=${size}&page=${page}`,
       {
-        json: { id: 259 },
+        json: { id: 243 },
         retry: {
           methods: ['POST'],
         },
